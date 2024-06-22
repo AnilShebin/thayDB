@@ -1,5 +1,3 @@
-// employeeService.js
-
 const db = require('../config/db');
 const bcrypt = require('bcrypt');
 
@@ -15,13 +13,10 @@ const createEmployee = async (employeeData) => {
       employeeAccruedLeaves,
       email,
       roleName,
-      password, // Plain text password
+      password,
     } = employeeData;
 
-    // Use a default password if not provided
     const providedPassword = password || 'password@123';
-
-    // Hash the password
     const hashedPassword = await bcrypt.hash(providedPassword, 10);
 
     const [result] = await db.query(
@@ -36,7 +31,7 @@ const createEmployee = async (employeeData) => {
         employeeAccruedLeaves,
         email,
         roleName,
-        hashedPassword, // Store the hashed password
+        hashedPassword,
       ]
     );
 
@@ -53,10 +48,7 @@ const getUserByEmail = async (email) => {
 };
 
 const getUserByEmployeeID = async (employeeID) => {
-  const [records] = await db.query(
-    "SELECT * FROM employee WHERE employeeID = ?",
-    [employeeID]
-  );
+  const [records] = await db.query("SELECT * FROM employee WHERE employeeID = ?", [employeeID]);
   return records[0];
 };
 
@@ -71,18 +63,12 @@ const getAllEmployees = async () => {
 };
 
 const getEmployeeByID = async (id) => {
-  const [records] = await db.query(
-    "SELECT employeeID, employeeName, employeeAge, employeeGender, employeeDOJ, employeeRemarks, employeeAccruedLeaves, email, password, roleName FROM employee WHERE employeeID = ?",
-    [id]
-  );
+  const [records] = await db.query("SELECT employeeID, employeeName, employeeAge, employeeGender, employeeDOJ, employeeRemarks, employeeAccruedLeaves, email, roleName FROM employee WHERE employeeID = ?", [id]);
   return records;
 };
 
 const deleteEmployee = async (id) => {
-  const [{ affectedRows }] = await db.query(
-    "DELETE FROM employee WHERE employeeID = ?",
-    [id]
-  );
+  const [{ affectedRows }] = await db.query("DELETE FROM employee WHERE employeeID = ?", [id]);
   return affectedRows;
 };
 
@@ -99,7 +85,7 @@ const updateEmployee = async (update, id) => {
   } = update;
 
   const [result] = await db.query(
-    'UPDATE employee SET employeeID =?, employeeName = ?, employeeAge = ?, employeeGender = ?, employeeDOJ = ?, employeeRemarks = ?, employeeAccruedLeaves = ?, roleName = ? WHERE employeeID = ?',
+    "UPDATE employee SET employeeID = ?, employeeName = ?, employeeAge = ?, employeeGender = ?, employeeDOJ = ?, employeeRemarks = ?, employeeAccruedLeaves = ?, roleName = ? WHERE employeeID = ?",
     [
       employeeID,
       employeeName,
@@ -116,10 +102,7 @@ const updateEmployee = async (update, id) => {
 };
 
 const getRoleByroleName = async (roleName) => {
-  const [records] = await db.query(
-    "SELECT * FROM roles WHERE roleName = ?",
-    [roleName]
-  );
+  const [records] = await db.query("SELECT * FROM roles WHERE roleName = ?", [roleName]);
   return records[0];
 };
 

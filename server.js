@@ -1,5 +1,3 @@
-// server.js
-
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -15,13 +13,17 @@ const rolesRoutes = require('./controllers/roleController');
 const holidayRoutes = require('./controllers/holidayController');
 const timeRoutes = require('./controllers/timeController');
 const payslipRoutes = require('./controllers/payslipController');
+const passwordRoutes = require('./controllers/passwordController'); // Import password-related routes
 
-// Import password-related routes
-const passwordRoutes = require('./controllers/passwordController'); // Make sure this line is present
+// CORS configuration
+const corsOptions = {
+  origin: 'https://thaytech.vercel.app',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true // Allow credentials (cookies, authorization headers, etc.) to be included in requests
+};
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+app.use(cors(corsOptions));
 
 // Use authentication middleware for routes under '/api/auth'
 app.use('/api/auth', authRoutes);
@@ -34,7 +36,7 @@ app.use('/api/time', authenticateToken, timeRoutes);
 app.use('/api/payslip', authenticateToken, payslipRoutes);
 
 // Use password routes
-app.use('/api/password', authenticateToken, passwordRoutes); // Make sure this line is present
+app.use('/api/password', authenticateToken, passwordRoutes);
 
 // Handle Errors middleware should be placed last
 app.use(handleErrors);

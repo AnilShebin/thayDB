@@ -1,30 +1,30 @@
-// passwordService.js
-
+const express = require('express');
+const router = express.Router();
 const bcrypt = require('bcrypt');
-const db = require('../config/db');
+const { updatePasswordById } = require('../services/authService');
 
-const hashPassword = async (password) => {
-  return await bcrypt.hash(password, 10);
-};
-
-const updatePasswordById = async (newPassword, employeeID) => {
+// Update Password by ID Route
+router.put('/:id', async (req, res) => {
   try {
-    // Hash the new password
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const { newPassword } = req.body;
+    const employeeID = req.params.id;
 
-    const [result] = await db.query(
-      'UPDATE employee SET password = ? WHERE employeeID = ?',
-      [hashedPassword, employeeID]
-    );
+    if (!newPassword) {
+      return res.status(400).json({ error: 'New password is required' });
+    }
 
-    return result.affectedRows;
+    // Update the password using the service function
+    const affectedRows = await updatePasswordById(newPassword, employeeID);
+
+    if (affectedRows === 0) {
+      return res.status(404).json({ error: 'No record with the given id' });
+    } else {
+      return res.send('Password updated successfully.');
+    }
   } catch (error) {
-    console.error('Error in updatePasswordById:', error.message);
-    throw error;
+    console.error(error);
+    res.status(400).json({ error: error.message });
   }
-};
+});
 
-module.exports = {
-  hashPassword,
-  updatePasswordById,
-};
+module.exports = router;

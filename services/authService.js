@@ -1,5 +1,3 @@
-// authService.js
-
 const db = require('../config/db');
 const bcrypt = require('bcrypt');
 const { getRoleByroleName } = require('../services/employeeService');
@@ -89,7 +87,7 @@ const updatePasswordById = async (newPassword, employeeID) => {
 
     const [result] = await db.query(
       'UPDATE employee SET password = ? WHERE employeeID = ?',
-      [hashedPassword, employeeID]
+      [hashedPassword, parseInt(employeeID, 10)] // Ensure employeeID is treated as numeric
     );
 
     return result.affectedRows;
@@ -98,7 +96,6 @@ const updatePasswordById = async (newPassword, employeeID) => {
     throw error;
   }
 };
-
 
 module.exports = {
   createUser,

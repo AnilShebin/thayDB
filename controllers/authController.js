@@ -55,7 +55,7 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign(
       { userId: user.id, employeeID: user.employeeID, roleName: roleName },
       'sidvoefoqeofvnkpancpanpfvnqafnvqan',
-      { expiresIn: '1h' }
+      { expiresIn: '3h' } // Set expiration to 3 hours
     );
 
     // Set the token as a cookie

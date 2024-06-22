@@ -22,10 +22,6 @@ const authenticateToken = (req, res, next) => {
 
             return res.status(403).json({ error: 'Forbidden - Invalid token' });
         }
-
-        // Log the decoded user information
-        console.log('Decoded User:', user);
-
         // Attach the user information to the request for further use
         req.user = user;
         next();
